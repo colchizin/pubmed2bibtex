@@ -1,0 +1,16 @@
+{
+  "name": "Pubmed2Bibtex",
+  "version": "0.1",
+  "description": "A little button for converting a selected PMID to BibTex-Code",
+  "homepage_url" : "https://github.com/colchizin/pubmed2bibtex",
+  "background_page": "background.html",
+  "icons" : {"128" : "res/icon_gross.png", "64" : "res/icon_gross.png"},
+  "browser_action": {
+    "default_icon": "res/icon.png",
+    "default_title": "Pubmed 2 BibTEX",
+    "default_popup":"popup.html"
+  },
+  "permissions": [
+    "tabs",  "http://*/*", "https://*/*"
+  ]
+}

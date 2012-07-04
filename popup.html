@@ -1,0 +1,86 @@
+<html>
+
+<head>
+
+<style type="text/css">
+
+	input {
+		border:1px solid blue;
+		width:100px;
+	}
+	
+	input.default {
+		color:grey;
+	}
+	
+	body {
+		width:150px;
+		height:20px;
+		padding:0px;
+	}
+
+</style>
+
+<script language="javascript">
+
+function IsNumeric(input) {
+    var RE = /^-{0,1}\d*\.{0,1}\d+$/;
+    return (RE.test(input));
+}
+
+chrome.extension.onConnect.addListener(function(port) {
+	var tab = port.sender.tab;
+
+    // This will get called by the content script we execute in
+    // the tab as a result of the user pressing the browser action.
+    port.onMessage.addListener(function(info) {
+    	var pmid = 0;
+    	
+    	if ((info.selection.length == 0) || !IsNumeric(info.selection)) {
+    		if (info.url.indexOf("http://www.ncbi.nlm.nih.gov/pubmed/")!=-1) {
+				var parts = info.url.split("/");
+				if (IsNumeric(parts[parts.length-1])) {
+					pmid = parts[parts.length-1];
+				}
+			}
+    	} else {
+    		pmid=info.selection;
+    	}
+    
+		if (pmid != 0)
+			show(pmid);
+    });
+  });
+
+function clearInput(input) {
+	if (input.value=="Pubmed-ID") {
+		input.value="";
+		input.className = "";
+	}
+}
+
+function show(pmid) {
+	/*
+	 * Query the pubmed-texmed-converter of www.bioinformatics.org/texmed/
+	 */
+	window.open("http://www.bioinformatics.org/texmed/cgi-bin/list.cgi?PMID="+pmid+"&tool=ChromeTexMedSearch","Pubmed to bibTeX","width=600,height=300,resizable,scrollbars");
+	window.close();
+}
+
+function pollInput() {
+	show(document.getElementById("input_pmid").value)
+}
+
+chrome.tabs.executeScript(null, {file: "content_script.js"});
+
+</script>
+
+</head>
+
+<body>
+<form>
+<input class=default type=text onfocus="clearInput(this)" id="input_pmid" value="Pubmed-ID" />
+<button onclick="pollInput()">Los</button>
+</form>
+</body>
+</html>

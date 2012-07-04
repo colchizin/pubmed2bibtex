@@ -1,0 +1,27 @@
+<html>
+<head>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+<script>
+  
+     // Listen for any changes to the URL of any tab.
+    chrome.tabs.onUpdated.addListener(function(tabID, blub, tab) {
+    	if (tab.url.indexOf("/www.ncbi.nlm.nih.gov/pubmed/") != -1) {
+    		chrome.browserAction.setIcon({path:"res/icon_aktiv.png",tabId:tabID});
+    	}
+    });
+  
+  function pollSelection() {
+	chrome.tabs.executeScript(null,{file:"content_script.js"});
+  }
+
+/*  chrome.pageAction.onClicked.addListener(function(tab) {
+  	if (tab.url.indexOf(http://www.ncbi.nlm.nih.gov/pubmed/) != -1)
+	  	pollSelection();
+	else
+		chrome.browserAction.setPopup("popup.html");
+  });
+  */
+  
+</script>
+</head>
+</html>
